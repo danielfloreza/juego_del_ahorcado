@@ -3,11 +3,8 @@ import random
 
 
 def read():
-    words = []
     with open("./archivos/data.txt","r") as data:
-        for line in data:
-            line = line.replace("\n","")
-            words.append(line)    
+         words = [line.replace("\n","") for line in data]
     return words
 
 
