@@ -8,8 +8,24 @@ def read():
     return words
 
 
+def replace_words(actual_word):
+    actual_word=actual_word.lower()
+    replacements=[
+        ("á","a"),
+        ("é","e"),
+        ("í","i"),
+        ("ó","o"),
+        ("ú","u"),
+        ("ü","u")
+        ]
+    for a,b in replacements:
+        actual_word=actual_word.replace(a,b)
+    
+    return actual_word
+
 def generate_dict(words):
     actual_word=random.choice(words)
+    actual_word=replace_words(actual_word)
     dict_word={}
     for i in range(len(actual_word)):
         dict_word[i]=actual_word[i]    
@@ -17,15 +33,15 @@ def generate_dict(words):
 
 
 def recevied():
-    letter=str(input("\nEscribe una letra: "))
-    letter=letter.strip()
-    return letter
+    letter_recevied=str(input("\nEscribe una letra: "))
+    letter_recevied=letter_recevied.strip()
+    return letter_recevied
 
 
-def verified(received,dict_word, dict_screen):
+def verified(letter_recevied,dict_word, dict_screen):
     for key in dict_word:
-        if dict_word[key]==received:
-            dict_screen[key]=received
+        if dict_word[key]==letter_recevied:
+            dict_screen[key]=letter_recevied
             
     return dict_screen
 
