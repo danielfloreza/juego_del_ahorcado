@@ -23,13 +23,19 @@ def replace_words(actual_word):
     
     return actual_word
 
+
 def generate_dict(words):
     actual_word=random.choice(words)
     actual_word=replace_words(actual_word)
     dict_word={}
     for i in range(len(actual_word)):
-        dict_word[i]=actual_word[i]    
-    return dict_word
+        dict_word[i]=actual_word[i]
+        
+    dict_screen={}
+    for key in dict_word:
+        dict_screen[key]="__"
+        
+    return [dict_word,dict_screen]
 
 
 def recevied():
@@ -46,43 +52,62 @@ def verified(letter_recevied,dict_word, dict_screen):
     return dict_screen
 
 
-def screen(dict_word,dict_screen):
+def screen(dicts,words):
+    dict_word=dicts[0]
+    dict_screen=dicts[1]
     win=True
+    
     for value in dict_screen.values():
         if value=="__":
             win=False
+            
     if win is False:
-        print("La valabra es:\n")
+        print("Adivina la palabra que estoy pensando: ")
+        print("La palabra es:\n")
         for value in dict_screen.values():
             print(value,end=" ")
     
         dict_screen=verified(recevied(),dict_word,dict_screen)
+        dicts=[dict_word,dict_screen]
         os.system("cls")
-        screen(dict_word,dict_screen)
+        screen(dicts,words)
     else:
         for value in dict_screen.values():
             print(value,end=" ")
         print("\n")
         print("¡¡You Win!!")
-        answer=input("\nQuieres seguir jugando? 1:Si o 2:No\n")
-        if answer==str(1):
-            run()
+        run(words)
+    
+    
+        
+def start(words):
+    dicts=generate_dict(words)
+    screen(dicts,words)
+
+
+def run(words):
+    print("=====================================\n")
+    print("|| Bienvenido al juego del ahorcado.||\n")
+    print("=====================================\n")
+    answer=input("""Quieres continuar con el juego?
+                 1: SÍ
+                 2: NO\n:""")
+    
+    os.system("cls")
+    
+    if answer.strip() != str(1) and  answer.strip()!=str(2):
+        print("Escogió "+answer)
+        print("Escriba un opción válida.")
+        run(words)
+    else:
+        if answer.strip()==str(1):
+            start(words)
         else:
-            print("Hasta la próxima!!")
-    
-    
-    
-    
-def run():
-    print("He seleccionado una palabra al azar, puedes adivinarla?")
-    dict_word=generate_dict(read())
-    dict_screen={}
-    for key in dict_word:
-        dict_screen[key]="__"
-    screen(dict_word, dict_screen)
-
-    
+            print("Escogió: "+answer)
+            print("Hasta la próxima!")
 
 
+    
 if __name__ == '__main__':
-    run()
+    words=read()
+    run(words)
