@@ -44,51 +44,80 @@ def recevied():
     return letter_recevied
 
 
-def verified(letter_recevied,dict_word, dict_screen):
+def verified(letter_recevied,dict_word, dict_screen,attempts):
+    counter=0
     for key in dict_word:
         if dict_word[key]==letter_recevied:
             dict_screen[key]=letter_recevied
+            counter+=1
+    if counter==0:
+        attempts=attempts-1
             
-    return dict_screen
+    return [dict_screen,attempts]
 
 
-def screen(dicts,words):
+def screen(dicts,words,level,lifes, attempts):
+    os.system("cls")
     dict_word=dicts[0]
     dict_screen=dicts[1]
+    
+    print("Nivel: "+str(level))
+    print("Vidas restantes: "+str(lifes))
+    print("Intentos por palabra: "+str(attempts)+"\n")
     win=True
     
     for value in dict_screen.values():
         if value=="__":
             win=False
-            
-    if win is False:
-        print("Adivina la palabra que estoy pensando: ")
-        print("La palabra es:\n")
-        for value in dict_screen.values():
-            print(value,end=" ")
     
-        dict_screen=verified(recevied(),dict_word,dict_screen)
-        dicts=[dict_word,dict_screen]
-        os.system("cls")
-        screen(dicts,words)
+    if win is False:
+        if attempts<=0:
+            lifes=lifes-1
+            attempts=10
+            print("Te quedaste sin intentos para esta palabra y has perdido una vida.\n")
+            answer=input("Oprime una tecla para continuar")
+            start(words,level,lifes,attempts)
+        if lifes <=0:
+            print("¡Te has quedado sin vidas! :(\n")
+            level=1
+            lifes=3
+            attempts=10
+            answer=input("Oprime una tecla para continuar")
+            os.system("cls")
+            run(words, level, lifes, attempts)
+        else:
+            print("Adivina la palabra que estoy pensando: ")
+            print("La palabra es:\n")
+            for value in dict_screen.values():
+                print(value,end=" ")
+        
+            dict_screen=verified(recevied(),dict_word,dict_screen,attempts)
+            dicts=[dict_word,dict_screen[0]]
+            attempts=dict_screen[1]
+            screen(dicts,words,level,lifes,attempts)
     else:
         for value in dict_screen.values():
             print(value,end=" ")
         print("\n")
         print("¡¡You Win!!")
-        run(words)
+        print("Has pasado al siguiente nivel\n")
+        answer=input("Oprime una tecla para continuar")
+        level+=1
+        attempts=10
+        start(words,level,lifes,attempts)
     
     
         
-def start(words):
+def start(words,level,lifes,attempts):
     dicts=generate_dict(words)
-    screen(dicts,words)
+    screen(dicts,words,level,lifes,attempts)
 
 
-def run(words):
+def run(words,level,lifes,attempts):
     print("=====================================\n")
     print("|| Bienvenido al juego del ahorcado.||\n")
     print("=====================================\n")
+
     answer=input("""Quieres continuar con el juego?
                  1: SÍ
                  2: NO\n:""")
@@ -98,10 +127,10 @@ def run(words):
     if answer.strip() != str(1) and  answer.strip()!=str(2):
         print("Escogió "+answer)
         print("Escriba un opción válida.")
-        run(words)
+        run(words,level, lifes, attempts)
     else:
         if answer.strip()==str(1):
-            start(words)
+            start(words,level, lifes,attempts)
         else:
             print("Escogió: "+answer)
             print("Hasta la próxima!")
@@ -110,4 +139,7 @@ def run(words):
     
 if __name__ == '__main__':
     words=read()
-    run(words)
+    level=1
+    lifes=3
+    attempts=10
+    run(words,level,lifes,attempts)
