@@ -75,16 +75,23 @@ def screen(dicts,words,level,lifes, attempts):
             lifes=lifes-1
             attempts=10
             print("Te quedaste sin intentos para esta palabra y has perdido una vida.\n")
-            answer=input("Oprime una tecla para continuar")
+            print("La palabra era: ", end=" ")
+            for value in dict_word.values():
+                print(value,end="")
+            print("\n")
+            answer=input("Oprime Enter para continuar")
             start(words,level,lifes,attempts)
         else:
             if lifes <=0:
                 print("¡Te has quedado sin vidas! :(\n")
+                print("________________________________\n")
+                print("| °°°Llegaste al nivel: "+str(level)+"°°° |")
+                print("________________________________\n")
+                answer=input("Oprime Enter para continuar")
+                os.system("cls")
                 level=1
                 lifes=3
                 attempts=10
-                answer=input("Oprime una tecla para continuar")
-                os.system("cls")
                 run(words, level, lifes, attempts)
             else:
                 print("Adivina la palabra que estoy pensando: ")
@@ -102,7 +109,7 @@ def screen(dicts,words,level,lifes, attempts):
         print("\n")
         print("¡¡You Win!!")
         print("Has pasado al siguiente nivel\n")
-        answer=input("Oprime una tecla para continuar")
+        answer=input("Oprime Enter para continuar")
         level+=1
         attempts=10
         start(words,level,lifes,attempts)
