@@ -4,7 +4,12 @@ import random
 
 def read():
     with open("./archivos/data.txt","r") as data:
-         words = [line.replace("\n","") for line in data]
+         words_raw = [line.replace("\n","") for line in data]
+         words=[]
+         for word in words_raw:
+             word=replace_words(word)
+             words.append(word)
+             
     return words
 
 
@@ -35,7 +40,7 @@ def generate_dict(words):
     for key in dict_word:
         dict_screen[key]="__"
         
-    return [dict_word,dict_screen]
+    return [actual_word,dict_word,dict_screen]
 
 
 def recevied():
@@ -58,8 +63,9 @@ def verified(letter_recevied,dict_word, dict_screen,attempts):
 
 def screen(dicts,words,level,lifes, attempts):
     os.system("cls")
-    dict_word=dicts[0]
-    dict_screen=dicts[1]
+    actual_word=dicts[0]
+    dict_word=dicts[1]
+    dict_screen=dicts[2]
     
     print("Nivel: "+str(level))
     print("Vidas restantes: "+str(lifes))
@@ -79,6 +85,7 @@ def screen(dicts,words,level,lifes, attempts):
             for value in dict_word.values():
                 print(value,end="")
             print("\n")
+            
             answer=input("Oprime Enter para continuar")
             start(words,level,lifes,attempts)
         else:
@@ -92,6 +99,7 @@ def screen(dicts,words,level,lifes, attempts):
                 level=1
                 lifes=3
                 attempts=10
+                words=read()
                 run(words, level, lifes, attempts)
             else:
                 print("Adivina la palabra que estoy pensando: ")
@@ -100,26 +108,34 @@ def screen(dicts,words,level,lifes, attempts):
                     print(value,end=" ")
         
                 dict_screen=verified(recevied(),dict_word,dict_screen,attempts)
-                dicts=[dict_word,dict_screen[0]]
+                dicts=[actual_word,dict_word,dict_screen[0]]
                 attempts=dict_screen[1]
                 screen(dicts,words,level,lifes,attempts)
     else:
         for value in dict_screen.values():
             print(value,end=" ")
         print("\n")
-        print("¡¡You Win!!")
+        print("¡¡You Win!!\n")
         print("Has pasado al siguiente nivel\n")
         answer=input("Oprime Enter para continuar")
         level+=1
         attempts=10
+        words.remove(actual_word)
         start(words,level,lifes,attempts)
     
     
         
 def start(words,level,lifes,attempts):
-    dicts=generate_dict(words)
-    screen(dicts,words,level,lifes,attempts)
-
+    if len(words)!=0:
+        dicts=generate_dict(words)
+        screen(dicts,words,level,lifes,attempts)
+    else:
+        os.system("cls")
+        print("----------------------------------------")
+        print("|          ¡¡felicidades!!             |")
+        print("|  Has completado todos los niveles!   |")
+        print("|      °°°Ganaste el juego°°°          |")
+        print("----------------------------------------")
 
 def run(words,level,lifes,attempts):
     print("=====================================\n")
